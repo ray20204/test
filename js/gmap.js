@@ -42,8 +42,19 @@ function setArea() {
                     content: value.Location
                 });
                 google.maps.event.addListener(cityCircle, 'click', function(ev){
-                    infoWindow.setPosition(ev.latLng);
-                    infoWindow.open(map);
+                    //infowindow
+                    //infoWindow.setPosition(ev.latLng);
+                    //infoWindow.open(map);
+                    //test street view
+                    var panoramaOptions = {
+                        position: ev.latLng,
+                        pov: {
+                          heading: 34,
+                          pitch: 10
+                        }
+                    };
+                    var panorama = new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), panoramaOptions);
+                      map.setStreetView(panorama);
                 });
             });
         }
