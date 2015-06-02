@@ -1,0 +1,25 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 20px;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto;
+}
+.row {
+    padding-top: 15px;
+    padding-left: 15px;
+}
+#map-canvas {
+    width: 600px;
+    height: 400px;
+    background:#D8D8D8;
+    border-radius: 10%;
+    box-shadow: 0 0 10px -1px #000, 0 0;
+    margin: 0 auto;
+}
+.place-list {
+    width: 600px;
+    height: 400px;
+    margin: 0 auto;
+}
