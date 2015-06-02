@@ -18,6 +18,14 @@ body {
     box-shadow: 0 0 10px -1px #000, 0 0;
     margin: 0 auto;
 }
+#viewstreet {
+    width: 600px;
+    height: 400px;
+    background:#D8D8D8;
+    border-radius: 10%;
+    box-shadow: 0 0 10px -1px #000, 0 0;
+    margin: 0 auto;
+}
 .place-list {
     width: 600px;
     height: 400px;
