@@ -16,6 +16,7 @@ function initialize() {
 }
 google.maps.event.addDomListener(window, 'load', this.initialize);
 var panorama;
+var circleTimer;
 function setArea() {
     $.ajax({
         type: "GET",
@@ -56,7 +57,8 @@ function setArea() {
                     };
                     panorama = new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), panoramaOptions);
                     map.setStreetView(panorama);
-                    setTimeout(runCircle, 2000);
+                    clearTimeout(circleTimer);
+                    circleTimer = setTimeout(runCircle, 2000);
                 });
             });
         }
@@ -76,5 +78,5 @@ function runCircle() {
         streetPov.heading = 0;
     }
     panorama.setPov(streetPov);
-    setTimeout(runCircle, 2000);
+    circleTimer = setTimeout(runCircle, 2000);
 }
