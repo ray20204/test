@@ -15,6 +15,7 @@ function initialize() {
     setArea();
 }
 google.maps.event.addDomListener(window, 'load', this.initialize);
+var panorama;
 function setArea() {
     $.ajax({
         type: "GET",
@@ -49,14 +50,31 @@ function setArea() {
                     var panoramaOptions = {
                         position: ev.latLng,
                         pov: {
-                          heading: 34,
+                          heading: 0,
                           pitch: 10
                         }
                     };
-                    var panorama = new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), panoramaOptions);
-                      map.setStreetView(panorama);
+                    panorama = new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), panoramaOptions);
+                    map.setStreetView(panorama);
+                    setTimeout(runCircle, 2000);
                 });
             });
         }
     });
+}
+var around;
+function randMove() {
+    around = panorama.getLinks();
+    var randPosition = Math.floor((Math.random() * around.length));
+    console.log(randPosition);
+    panorama.setPano(around[randPosition].pano);
+}
+var streetPov = {heading: 0, pitch: 10};
+function runCircle() {
+    streetPov.heading += 45;
+    if (360 === streetPov.heading) {
+        streetPov.heading = 0;
+    }
+    panorama.setPov(streetPov);
+    setTimeout(runCircle, 2000);
 }
