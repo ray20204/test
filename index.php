@@ -15,15 +15,17 @@ $sToken = md5(session_id() . $_SERVER['REMOTE_ADDR']);
 <script type="text/javascript" src="/js/gmap.js"></script>
 </head>
 <body class="index">
-<div class="row">
-    <div id="map-canvas"></div>
-    <div id="viewstreet"></div>
-    <div class="place-list">
-        <ul class="list-group">
-            <!--container  -->
-        </ul>
+    <div class="container">
+        <div class="row">
+            <div class="place-list col-md-3">
+                <ul class="list-group">
+                    <!--container  -->
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div id="map-canvas"></div>
+                <div id="viewstreet"></div>
+        </div>
     </div>
-</div>
-</div>
 </body>
 </html>
