@@ -17,6 +17,8 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', this.initialize);
 var panorama;
 var circleTimer;
+var jsonData;
+var placeArr = [];
 function setArea() {
     $.ajax({
         type: "GET",
@@ -24,11 +26,12 @@ function setArea() {
         dataType: "json",
         async: true,
         success: function(data) {
+            jsonData = data;
             $.each(data, function(index, value){
-                var listhtml = '<li class="place list-group-item">' + value.Location + '</li>';
+                var listhtml = '<a href="#"  class="place list-group-item" data-id="' + index  + '">' + value.Location + '</>';
                 $('.place-list > ul').append(listhtml);
                 //console.log('ret= ' + value.ret + ' lng= ' + value.lng);
-                var place = new google.maps.LatLng(value.ret, value.lng);
+                placeArr.push(new google.maps.LatLng(value.ret, value.lng));
                 var populationOptions = {
                     strokeColor: '#FF0000',
                     strokeOpacity: 0.6,
@@ -36,7 +39,7 @@ function setArea() {
                     fillColor: '#FF0000',
                     fillOpacity: 0.1,
                     map: map,
-                    center: place,
+                    center: placeArr[index],
                     radius: 100
                 };
                 cityCircle = new google.maps.Circle(populationOptions);
@@ -80,3 +83,21 @@ function runCircle() {
     panorama.setPov(streetPov);
     circleTimer = setTimeout(runCircle, 2000);
 }
+
+jQuery(function() {
+    $(document).on('click', '.place', function(e) {
+        var placeid = $(this).data('id');
+        map.setCenter(placeArr[placeid]);
+        var panoramaOptions = {
+            position: placeArr[placeid],
+            pov: {
+              heading: 0,
+              pitch: 10
+            }
+        };
+        panorama = new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), panoramaOptions);
+        map.setStreetView(panorama);
+        clearTimeout(circleTimer);
+        circleTimer = setTimeout(runCircle, 2000);
+    });
+});
