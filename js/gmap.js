@@ -22,7 +22,7 @@ var placeArr = [];
 function setArea() {
     $.ajax({
         type: "GET",
-        url: "/data.json",
+        url: "data.json",
         dataType: "json",
         async: true,
         success: function(data) {
