@@ -20,6 +20,7 @@ var gmap = ({
         this.el.$placeItem.click(this.bind(this, this.handleClick));
     },
     handleClick: function(e) {
+        e.preventDefault();
         var placeid = $(e.target).data('id');
         this.map.setCenter(this.placeArr[placeid]);
         this.setStreetView(this.placeArr[placeid]);
