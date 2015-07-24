@@ -4,10 +4,6 @@ var gmap = ({
     placeArr: [],
     panorama: '',
     circleTimer: '',
-    streetPov: {
-        heading: 0,
-        pitch: 10
-    },
     el: {
         $placeList: null,
         $placeItem: null
@@ -26,13 +22,14 @@ var gmap = ({
         this.setStreetView(this.placeArr[placeid]);
     },
     initPosition: function() {
-        var myLatlng = new google.maps.LatLng(25.0633936, 121.520279);
+        var myLatlng = new google.maps.LatLng(25.0622666, 121.5391304);
         mapOptions = {
             zoom: 15,
             center: myLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         gmap.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        gmap.setStreetView(myLatlng);
         //var geocoder = new google.maps.Geocoder();
     },
     initData: function() {
@@ -47,7 +44,6 @@ var gmap = ({
                         var latLngObject = this.getLatLng(value.ret, value.lng);
                         this.placeArr.push(latLngObject);
                         this.plotCircle(latLngObject);
-
                     })
                 );
                 this.initEl();
@@ -91,23 +87,24 @@ var gmap = ({
         };
         this.panorama = this.getStreetViewPanorama(panoramaOptions);
         this.map.setStreetView(this.panorama);
-        clearTimeout(this.circleTimer);
-        this.circleTimer = setTimeout(this.bind(this, this.runCircle), 2000);
+
+        clearInterval(this.circleTimer);
+        this.runCircle();
     },
     getStreetViewPanorama: function(option) {
         return new google.maps.StreetViewPanorama(document.getElementById('viewstreet'), option);
     },
     runCircle: function() {
-        this.streetPov.heading += 45;
-        if (360 === this.streetPov.heading) {
-            this.streetPov.heading = 0;
+        var pano = this.panorama;
+        function _runCircle() {
+            var pov = pano.getPov();
+            pov.heading += 0.2;
+            pano.setPov(pov);
         }
-        this.panorama.setPov(this.streetPov);
-        this.circleTimer = setTimeout(this.bind(this, this.runCircle), 2000);
+        this.circleTimer = setInterval(_runCircle, 10);
     },
     init: function() {
         google.maps.event.addDomListener(window, 'load', this.initPosition);
-        //this.initData();
     },
     bind: function(obj, method) {
         return function() {
