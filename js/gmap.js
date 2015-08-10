@@ -36,7 +36,6 @@ var gmap = ({
         this.initEl();
         $.getJSON("data.json").done(
             this.bind(this, function(ret) {
-                this.zipArr = ret;
                 $.each(ret,
                     this.bind(this, function(index, value) {
                         var listhtml = '<a href="#"  class="place list-group-item" data-id="' + index  + '">' + value.Location + '</>';
