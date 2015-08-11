@@ -127,8 +127,8 @@ var gmap = ({
                 }
             }
             var showDistance = this.totalDistance / 1000;
-            var showDuration;
-            $('.displayInfo').append(showDistance.toFixed(2) + ' 公里 ');
+            var showDuration = convertTime(this.totalDuration);
+            $('.displayInfo').append('距離：' + showDistance.toFixed(2) + ' 公里 ' + '  預估時間：' + showDuration);
         }));
     },
     bind: function(obj, method) {
@@ -143,3 +143,9 @@ $(function() {
         gmap.initData();
     }, 2000);
 });
+function convertTime(dursec) {
+    var hour = parseInt(dursec / 3600);
+    dursec -= hour * 3600;
+    var min = parseInt(dursec / 60);
+    return hour + '小時' + min + '分';
+}
