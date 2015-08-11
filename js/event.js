@@ -6,6 +6,8 @@ var gmap = ({
     startpt: '',
     endpt: '',
     waypts: [],
+    totalDistance: 0,
+    totalDuration: 0,
     placeArr: [],
     panorama: '',
     circleTimer: '',
@@ -117,11 +119,16 @@ var gmap = ({
                 this.directionsDisplay.setDirections(response);
                 var route = response.routes[0];
                 for (var i = 0; i < route.legs.length; i++) {
+                    this.totalDistance += route.legs[i].distance.value;
+                    this.totalDuration += route.legs[i].duration.value;
                     var distance = '<span class="label label-primary">' + route.legs[i].distance.text  + '</span>';
                     var dirtime = '<span class="label label-success">' + route.legs[i].duration.text  + '</span>';
                     $('.list-group-item').eq(i + 1).append('<br>' + distance + dirtime);
                 }
             }
+            var showDistance = this.totalDistance / 1000;
+            var showDuration;
+            $('.displayInfo').append(showDistance.toFixed(2) + ' 公里 ');
         }));
     },
     bind: function(obj, method) {
