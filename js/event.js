@@ -3,6 +3,8 @@ var gmap = ({
     map: '',
     directionsService: '',
     directionsDisplay: '',
+    startpt: '',
+    endpt: '',
     waypts: [],
     placeArr: [],
     panorama: '',
@@ -45,8 +47,20 @@ var gmap = ({
                         this.el.$placeList.append(listhtml);
                         var latLngObject = this.getLatLng(value.ret, value.lng);
                         this.placeArr.push(latLngObject);
-                        this.plotCircle(latLngObject);
-                        this.waypts[index] = [value.ret + ',' + value.lng];
+
+                        var retLngstr = value.ret + ',' + value.lng;
+                        if (0 === index) {
+                            this.startpt = retLngstr;
+                        }
+                        if (0 < index && (ret.length - 1) > index) {
+                            this.waypts.push({
+                                location:retLngstr,
+                                stopover:true
+                            });
+                        }
+                        if ((ret.length - 1) === index) {
+                            this.endpt = retLngstr;
+                        }
                     })
                 );
                 this.setDirectionRoute();
@@ -57,11 +71,6 @@ var gmap = ({
     },
     getLatLng: function(ret, lng) {
         return new google.maps.LatLng(ret, lng);
-    },
-    plotCircle: function(latLngObject, location) {
-        var infoWindow = new google.maps.InfoWindow({
-            content: location
-        });
     },
     setStreetView: function(latLng) {
         var panoramaOptions = {
@@ -94,19 +103,10 @@ var gmap = ({
         google.maps.event.addDomListener(window, 'load', this.initPosition);
     },
     setDirectionRoute: function () {
-        var start = this.waypts[0][0];
-        var end = this.waypts[this.waypts.length - 1][0];
-        var wayArr = [];
-        for (var i = 1; i < this.waypts.length - 1; i++) {
-            wayArr.push({
-                location:this.waypts[i][0],
-                stopover:true
-            });
-        }
         var request = {
-            origin: start,
-            destination: end,
-            waypoints: wayArr,
+            origin: this.startpt,
+            destination: this.endpt,
+            waypoints: this.waypts,
             avoidHighways: true,
             optimizeWaypoints: true,
             travelMode: google.maps.TravelMode.DRIVING
