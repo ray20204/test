@@ -62,7 +62,7 @@ var gmap = ({
         var ret = this.placeArr[placeid].G;
         var lng = this.placeArr[placeid].K;
         var state = distance(ret, lng);
-        var image = '<img src=img/ball.jpg>';
+        var image = '<img src=/test/img/ball.jpg>';
         if (1 === state) {
             switch (placeid) {
                 case 0:
@@ -135,7 +135,7 @@ var gmap = ({
     },
     markerBall: function(ret, lng) {
         var latlng = this.getLatLng(ret, lng);
-        var image = 'img/ball.jpg';
+        var image = '/test/img/ball.jpg';
         this.map.setCenter(latlng);
         var marker = new google.maps.Marker({
             position: latlng,
