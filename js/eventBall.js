@@ -99,7 +99,7 @@ var gmap = ({
     initData: function() {
         this.initEl();
         this.placeArr = [];
-        $.getJSON("event.json").done(
+        $.getJSON("eventball.json").done(
             this.bind(this, function(ret) {
                 $.each(ret, this.bind(this, function(index, value) {
                     var listhtml = '<a href="#"  class="place list-group-item" data-id="' + index  + '">' + value.Location + '</>';
