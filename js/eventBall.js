@@ -1,5 +1,6 @@
 //direction
 var thisPos;
+var isStart = false;
 if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, errorHandler, {timeout:60000});
 } else {
@@ -14,7 +15,9 @@ function errorHandler(err) {
 }
 function showPosition(position) {
     thisPos = {Location: 'now', lng: position.coords.longitude, ret: position.coords.latitude};
-    gmap.onPositionChange();
+    if (isStart) {
+        gmap.onPositionChange();
+    }
 }
 //0: start , 1:pit, 2: goal
 function testCase(pos) {
@@ -31,7 +34,6 @@ function testCase(pos) {
     }
     gmap.onPositionChange();
 }
-var isStart = false;
 var gmap = ({
     map: '',
     userMarker: '',
@@ -96,6 +98,8 @@ var gmap = ({
         };
         gmap.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         gmap.directionsDisplay.setMap(gmap.map);
+        gmap.initHex();
+        gmap.initData();
     },
     initHex: function() {
         //left bottom to right top
@@ -108,7 +112,7 @@ var gmap = ({
     },
     onPositionChange: function () {
         if (!isStart) {
-            var state = distance(this.placeArr[0].G, this.placeArr[0].K);
+            var state = distance(25.0855065, 121.553956);
             if (1 === state) {
                 isStart = true;
                 $('.list-group').show();
@@ -142,12 +146,8 @@ var gmap = ({
 
                     var retLngstr = value.ret + ',' + value.lng;
                     if (0 === index) {
-                        var state = distance(Number(value.ret), Number(value.lng));
-                        if (0 === state) {
-                            this.initHex();
-                            this.markerBall(value.ret, value.lng);
-                            $('.displayInfo').append('龍珠');
-                        }
+                        this.markerBall(value.ret, value.lng);
+                        $('.displayInfo').append('龍珠');
                         this.startpt = retLngstr;
                     }
                     if (0 < index && (ret.length - 1) > index) {
@@ -248,8 +248,8 @@ var gmap = ({
 gmap.init();
 $(function() {
     setTimeout(function() {
-        gmap.initData();
-    }, 2000);
+        gmap.onPositionChange();
+    }, 3000);
 });
 function distance(ret2,lon2) {
     var state = 0;
