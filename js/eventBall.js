@@ -108,7 +108,6 @@ var gmap = ({
     },
     initData: function() {
         this.initEl();
-        this.initHex();
         this.placeArr = [];
         $.getJSON("eventball.json").done(
             this.bind(this, function(ret) {
@@ -122,6 +121,7 @@ var gmap = ({
                     if (0 === index) {
                         var state = distance(Number(value.ret), Number(value.lng));
                         if (0 === state) {
+                            this.initHex();
                             this.markerBall(value.ret, value.lng);
                             $('.displayInfo').append('龍珠');
                             return false;
