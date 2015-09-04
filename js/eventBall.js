@@ -87,7 +87,7 @@ var gmap = ({
     },
     initPosition: function() {
         gmap.directionsDisplay = new google.maps.DirectionsRenderer();
-        var myLatlng = new google.maps.LatLng(24.909898, 121.365848);
+        var myLatlng = new google.maps.LatLng(25.0855065, 121.553956);
         mapOptions = {
             zoom: 12,
             center: myLatlng,
