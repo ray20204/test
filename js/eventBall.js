@@ -98,7 +98,8 @@ var gmap = ({
         gmap.directionsDisplay.setMap(gmap.map);
     },
     initHex: function() {
-        var bbox = [121.5255804, 25.0625628, 121.5856904, 25.1204397];
+        //left bottom to right top
+        var bbox = [121.5098228, 25.0493519, 121.5866949, 25.1319599];
         var hexgrid = turf.hexGrid(bbox, 0.5, 'kilometers');
         this.map.data.setStyle(function(feature) {
             return { fillOpacity: 0.5, fillColor: 'green', strokeWeight: 1, strokeColor: '#333', strokeOpacity: 1};
