@@ -34,6 +34,7 @@ function testCase(pos) {
 var isStart = false;
 var gmap = ({
     map: '',
+    userMarker: '',
     directionsService: '',
     directionsDisplay: '',
     startpt: '',
@@ -113,6 +114,19 @@ var gmap = ({
                 $('.list-group').show();
                 this.setDirectionRoute();
             }
+            this.markerUserPosition();
+        }
+    },
+    markerUserPosition: function () {
+        var latlng = this.getLatLng(thisPos.ret, thisPos.lng);
+        this.map.setCenter(latlng);
+        if ('' === this.userMarker) {
+            this.userMarker = new google.maps.Marker({
+                position: latlng,
+                map: this.map,
+            });
+        } else {
+            this.userMarker.setPosition(latlng);
         }
     },
     initData: function() {
@@ -133,7 +147,6 @@ var gmap = ({
                             this.initHex();
                             this.markerBall(value.ret, value.lng);
                             $('.displayInfo').append('龍珠');
-                            //return false;
                         }
                         this.startpt = retLngstr;
                     }
