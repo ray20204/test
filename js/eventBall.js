@@ -32,6 +32,7 @@ function testCase(pos) {
         break;
     }
 }
+
 var gmap = ({
     map: '',
     directionsService: '',
@@ -89,15 +90,24 @@ var gmap = ({
         gmap.directionsDisplay = new google.maps.DirectionsRenderer();
         var myLatlng = new google.maps.LatLng(25.0855065, 121.553956);
         mapOptions = {
-            zoom: 12,
+            zoom: 14,
             center: myLatlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         gmap.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         gmap.directionsDisplay.setMap(gmap.map);
     },
+    initHex: function() {
+        var bbox = [121.5255804, 25.0625628, 121.5856904, 25.1204397];
+        var hexgrid = turf.hexGrid(bbox, 0.5, 'kilometers');
+        this.map.data.setStyle(function(feature) {
+            return { fillOpacity: 0.5, fillColor: 'green', strokeWeight: 1, strokeColor: '#333', strokeOpacity: 1};
+        });
+        this.map.data.addGeoJson(hexgrid);
+    },
     initData: function() {
         this.initEl();
+        this.initHex();
         this.placeArr = [];
         $.getJSON("eventball.json").done(
             this.bind(this, function(ret) {
