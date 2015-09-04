@@ -118,8 +118,8 @@ var gmap = ({
                 $('.list-group').show();
                 this.setDirectionRoute();
             }
-            this.markerUserPosition();
         }
+        this.markerUserPosition();
     },
     markerUserPosition: function () {
         var latlng = this.getLatLng(thisPos.ret, thisPos.lng);
