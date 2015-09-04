@@ -14,15 +14,13 @@ function errorHandler(err) {
 }
 function showPosition(position) {
     thisPos = {Location: 'now', lng: position.coords.longitude, ret: position.coords.latitude};
+    gmap.onPositionChange();
 }
 //0: start , 1:pit, 2: goal
 function testCase(pos) {
     switch (pos) {
         case 0:
         thisPos = {Location: 'now', lng: 121.5552137, ret: 25.0851076};
-        $('.displayInfo').html('');
-        gmap.el.$placeList.html('');
-        gmap.initData();
         break;
         case 1:
         thisPos = {Location: 'now', lng: 121.5536283, ret: 25.0926443};
@@ -31,8 +29,9 @@ function testCase(pos) {
         thisPos = {Location: 'now', lng: 121.5575088, ret: 25.1077731};
         break;
     }
+    gmap.onPositionChange();
 }
-
+var isStart = false;
 var gmap = ({
     map: '',
     directionsService: '',
@@ -102,9 +101,19 @@ var gmap = ({
         var bbox = [121.5098228, 25.0493519, 121.5866949, 25.1319599];
         var hexgrid = turf.hexGrid(bbox, 0.5, 'kilometers');
         this.map.data.setStyle(function(feature) {
-            return { fillOpacity: 0.5, fillColor: 'green', strokeWeight: 1, strokeColor: '#333', strokeOpacity: 1};
+            return { fillOpacity: 0.7, fillColor: 'green', strokeWeight: 1, strokeColor: '#333', strokeOpacity: 1};
         });
         this.map.data.addGeoJson(hexgrid);
+    },
+    onPositionChange: function () {
+        if (!isStart) {
+            var state = distance(this.placeArr[0].G, this.placeArr[0].K);
+            if (1 === state) {
+                isStart = true;
+                $('.list-group').show();
+                this.setDirectionRoute();
+            }
+        }
     },
     initData: function() {
         this.initEl();
@@ -124,7 +133,7 @@ var gmap = ({
                             this.initHex();
                             this.markerBall(value.ret, value.lng);
                             $('.displayInfo').append('龍珠');
-                            return false;
+                            //return false;
                         }
                         this.startpt = retLngstr;
                     }
@@ -138,7 +147,6 @@ var gmap = ({
                         this.endpt = retLngstr;
                     }
                 }));
-                this.setDirectionRoute();
                 this.initEl();
                 this.bindEvent();
             })
@@ -230,16 +238,16 @@ $(function() {
         gmap.initData();
     }, 2000);
 });
-function distance(lat2,lon2) {
+function distance(ret2,lon2) {
     var state = 0;
     if (typeof thisPos === 'undefined') {
         return state;
     }
     var R = 6371; // km (change this constant to get miles)
-    var dLat = (lat2- thisPos.ret) * Math.PI / 180;
+    var dLat = (ret2- thisPos.ret) * Math.PI / 180;
     var dLon = (lon2- thisPos.lng) * Math.PI / 180;
     var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(thisPos.ret * Math.PI / 180 ) * Math.cos(lat2 * Math.PI / 180 ) *
+    Math.cos(thisPos.ret * Math.PI / 180 ) * Math.cos(ret2 * Math.PI / 180 ) *
     Math.sin(dLon/2) * Math.sin(dLon/2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var d = R * c;
