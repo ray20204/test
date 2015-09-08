@@ -45,6 +45,7 @@ var gmap = ({
     totalDistance: 0,
     totalDuration: 0,
     placeArr: [],
+    walkPath: [],
     elevator: '',
     samplePoint: 100,
     el: {
@@ -127,7 +128,7 @@ var gmap = ({
         if ('' === this.userMarker) {
             this.userMarker = new google.maps.Marker({
                 position: latlng,
-                map: this.map,
+                map: this.map
             });
         } else {
             this.userMarker.setPosition(latlng);
@@ -188,7 +189,6 @@ var gmap = ({
             origin: this.startpt,
             destination: this.endpt,
             waypoints: this.waypts,
-            avoidHighways: true,
             optimizeWaypoints: true,
             travelMode: google.maps.TravelMode.WALKING
         };
@@ -198,7 +198,10 @@ var gmap = ({
                 return false;
             }
             this.directionsDisplay.setDirections(response);
+
             var route = response.routes[0];
+            this.walkPath = route.overview_path;
+
             for (var i = 0; i < route.legs.length; i++) {
                 this.totalDistance += route.legs[i].distance.value;
                 this.totalDuration += route.legs[i].duration.value;
@@ -214,30 +217,29 @@ var gmap = ({
     },
     getElevator: function() {
         this.elevator.getElevationAlongPath({
-            'path': this.placeArr,
+            'path': this.walkPath,
             'samples': this.samplePoint
         }, this.plotElevation);
 
     },
     plotElevation: function(elevations, status) {
         if (status !== google.maps.ElevationStatus.OK) {
-            // Show the error code inside the chartDiv.
             $('.displayInfo').html(status);
             return;
         }
         eventChart.init();
-        var dateArr = [];
+        var chartInfo = [];
         var dataArr = [];
         for (var i = 0; i < elevations.length; i++) {
             var pa = parseInt((i / gmap.samplePoint) * 100);
             if (0 === (pa % 5)) {
-                dateArr.push(pa+'%');
+                chartInfo.push(pa+'%');
             } else {
-                dateArr.push('');
+                chartInfo.push('');
             }
             dataArr.push(elevations[i].elevation);
          }
-        eventChart.plotLineChart(dateArr, dataArr);
+        eventChart.plotLineChart(chartInfo, dataArr);
     },
     bind: function(obj, method) {
         return function() {
@@ -245,6 +247,18 @@ var gmap = ({
         };
     }
 });
+var pathNum = 0;
+function runPath() {
+    setTimeout(function() {
+        thisPos = {Location: 'now', lng: gmap.walkPath[pathNum].K, ret: gmap.walkPath[pathNum].G};
+        gmap.onPositionChange();
+        pathNum++;
+        if (pathNum === gmap.walkPath.length) {
+            return false;
+        }
+        runPath();
+    }, 100);
+}
 gmap.init();
 $(function() {
     setTimeout(function() {
