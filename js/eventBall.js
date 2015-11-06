@@ -63,8 +63,8 @@ var gmap = ({
         e.preventDefault();
         var placeid = $(e.target).data('id');
         this.map.setCenter(this.placeArr[placeid]);
-        var ret = this.placeArr[placeid].G;
-        var lng = this.placeArr[placeid].K;
+        var ret = this.placeArr[placeid].lat();
+        var lng = this.placeArr[placeid].lng();
         var state = distance(ret, lng);
         var image = '<img src=/test/img/ball.jpg>';
         if (1 === state) {
@@ -250,7 +250,7 @@ var gmap = ({
 var pathNum = 0;
 function runPath() {
     setTimeout(function() {
-        thisPos = {Location: 'now', lng: gmap.walkPath[pathNum].K, ret: gmap.walkPath[pathNum].G};
+        thisPos = {Location: 'now', lng: gmap.walkPath[pathNum].lng(), ret: gmap.walkPath[pathNum].lat()};
         gmap.onPositionChange();
         pathNum++;
         if (pathNum === gmap.walkPath.length) {
